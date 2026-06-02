@@ -2,11 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ArrowDownUp, Download, Mail, Search, ShieldCheck, Users, WalletCards } from 'lucide-react';
 import { api, invoiceDownloadUrl } from './api';
+import { fenyxLogoDataUrl } from './assets/fenyxLogoData';
 import './index.css';
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const demoEmail = 'admin@fenyxfinance.com';
 const demoPassword = 'demo-password-123';
+const logoSrc = fenyxLogoDataUrl;
 
 function Badge({ status }) {
   const styles = {
@@ -43,7 +45,9 @@ function Login({ onLogin }) {
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-6">
       <form onSubmit={submit} className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
         <div className="mb-8 flex items-center gap-3">
-          <div className="rounded-2xl bg-blue-600 p-3 text-white"><ShieldCheck /></div>
+          <div className="flex h-20 w-28 items-center justify-center rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+            <img src={logoSrc} alt="Fenyx Finance logo" className="max-h-full max-w-full object-contain" />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">Admin Login</h1>
             <p className="text-sm text-slate-500">Secure demo access for Fenyx Finance</p>
@@ -57,7 +61,7 @@ function Login({ onLogin }) {
           <input className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
         <button className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700" disabled={loading}>{loading ? 'Signing in…' : 'Sign in securely'}</button>
-        <p className="mt-5 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">Demo credentials: {demoEmail} / {demoPassword}</p>
+        <p className="mt-5 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">Demo credentials: {demoEmail} / {demoPassword}. In Bolt.new, run <span className="font-semibold">npm run dev</span> and open the port 5173 preview.</p>
       </form>
     </main>
   );
@@ -96,7 +100,15 @@ function Dashboard({ admin, onLogout }) {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div><h1 className="text-xl font-bold">Fenyx Finance Admin</h1><p className="text-sm text-slate-500">Signed in as {admin.email}</p></div>
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-24 items-center justify-center rounded-2xl border border-slate-200 bg-white p-2">
+              <img src={logoSrc} alt="Fenyx Finance logo" className="max-h-full max-w-full object-contain" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Fenyx Finance Admin</h1>
+              <p className="text-sm text-slate-500">Signed in as {admin.email}</p>
+            </div>
+          </div>
           <button onClick={onLogout} className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold hover:bg-slate-50">Log out</button>
         </div>
       </header>
