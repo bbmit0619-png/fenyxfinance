@@ -40,6 +40,14 @@ function getRequestToken(req) {
 
 function requireAdmin(req, res, next) {
   const token = getRequestToken(req);
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 8 * 60 * 60 * 1000,
+  });
+}
+
+function requireAdmin(req, res, next) {
+  const token = req.cookies[COOKIE_NAME];
   if (!token) return res.status(401).json({ message: 'Authentication required' });
 
   try {
@@ -60,6 +68,8 @@ app.post('/api/auth/login', async (req, res) => {
   if (!validEmail || !validPassword) return res.status(401).json({ message: 'Invalid admin credentials' });
   const token = issueSession(res);
   return res.json({ admin: { email: ADMIN_EMAIL, role: 'admin' }, token });
+  issueSession(res);
+  return res.json({ admin: { email: ADMIN_EMAIL, role: 'admin' } });
 });
 
 app.post('/api/auth/logout', (_req, res) => {
