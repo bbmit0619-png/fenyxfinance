@@ -61,7 +61,7 @@ function Login({ onLogin }) {
           <input className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
         <button className="w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700" disabled={loading}>{loading ? 'Signing in…' : 'Sign in securely'}</button>
-        <p className="mt-5 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">Demo credentials: {demoEmail} / {demoPassword}</p>
+        <p className="mt-5 rounded-xl bg-slate-50 p-3 text-xs text-slate-500">Demo credentials: {demoEmail} / {demoPassword}. In Bolt.new, run <span className="font-semibold">npm run dev</span> and open the port 5173 preview.</p>
       </form>
     </main>
   );

@@ -37,7 +37,7 @@ Open `http://localhost:5173` for the React app. The Express API runs on `http://
 3. Open the Bolt preview for port `5173`.
 4. Sign in with email `admin@fenyxfinance.com` and password `demo-password-123`.
 
-The backend sets an HTTP-only JWT cookie and also returns the same short-lived JWT to the frontend as a sessionStorage fallback. The fallback keeps the Bolt preview login working in embedded preview environments where browser third-party cookie rules can block dev cookies.
+The backend sets an HTTP-only JWT cookie and also returns the same short-lived JWT to the frontend as a sessionStorage fallback. The fallback keeps the Bolt preview login working in embedded preview environments where browser third-party cookie rules can block development cookies; no extra cookie settings are required in `.env.example` for local/Bolt usage.
 
 ## Production notes
 
