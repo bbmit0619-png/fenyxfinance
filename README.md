@@ -29,6 +29,16 @@ npm run dev
 
 Open `http://localhost:5173` for the React app. The Express API runs on `http://localhost:4000`.
 
+
+## Logging in through Bolt.new
+
+1. Import or open this repository in Bolt.new.
+2. Let Bolt run the default `npm run dev` command. That starts both the Express API on port `4000` and the Vite dashboard on port `5173`.
+3. Open the Bolt preview for port `5173`.
+4. Sign in with email `admin@fenyxfinance.com` and password `demo-password-123`.
+
+The backend sets an HTTP-only JWT cookie and also returns the same short-lived JWT to the frontend as a sessionStorage fallback. The fallback keeps the Bolt preview login working in embedded preview environments where browser third-party cookie rules can block dev cookies.
+
 ## Production notes
 
 - Set a long random `JWT_SECRET`.

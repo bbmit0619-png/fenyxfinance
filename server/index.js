@@ -26,14 +26,20 @@ function issueSession(res) {
   const token = jwt.sign({ sub: ADMIN_EMAIL, role: 'admin' }, JWT_SECRET, { expiresIn: '8h', issuer: 'fenyxfinance-admin' });
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.COOKIE_SAMESITE ?? 'lax',
+    secure: process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production',
     maxAge: 8 * 60 * 60 * 1000,
   });
+  return token;
+}
+
+function getRequestToken(req) {
+  const bearerToken = req.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
+  return req.cookies[COOKIE_NAME] ?? bearerToken;
 }
 
 function requireAdmin(req, res, next) {
-  const token = req.cookies[COOKIE_NAME];
+  const token = getRequestToken(req);
   if (!token) return res.status(401).json({ message: 'Authentication required' });
 
   try {
@@ -52,8 +58,8 @@ app.post('/api/auth/login', async (req, res) => {
   const validPassword = await bcrypt.compare(password ?? '', passwordHash);
 
   if (!validEmail || !validPassword) return res.status(401).json({ message: 'Invalid admin credentials' });
-  issueSession(res);
-  return res.json({ admin: { email: ADMIN_EMAIL, role: 'admin' } });
+  const token = issueSession(res);
+  return res.json({ admin: { email: ADMIN_EMAIL, role: 'admin' }, token });
 });
 
 app.post('/api/auth/logout', (_req, res) => {

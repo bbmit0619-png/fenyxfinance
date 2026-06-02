@@ -1,7 +1,17 @@
+const tokenStorageKey = 'fenyx_admin_token';
+
+const getToken = () => sessionStorage.getItem(tokenStorageKey);
+const setToken = (token) => token ? sessionStorage.setItem(tokenStorageKey, token) : sessionStorage.removeItem(tokenStorageKey);
+
 const request = async (path, options = {}) => {
+  const token = getToken();
   const response = await fetch(path, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers ?? {}) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers ?? {}),
+    },
     ...options,
   });
 
@@ -15,8 +25,18 @@ const request = async (path, options = {}) => {
 };
 
 export const api = {
-  login: (email, password) => request('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }),
-  logout: () => request('/api/auth/logout', { method: 'POST' }),
+  login: async (email, password) => {
+    const session = await request('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+    setToken(session.token);
+    return session;
+  },
+  logout: async () => {
+    try {
+      await request('/api/auth/logout', { method: 'POST' });
+    } finally {
+      setToken(null);
+    }
+  },
   me: () => request('/api/auth/me'),
   summary: () => request('/api/summary'),
   clients: (params) => request(`/api/clients?${new URLSearchParams(params)}`),
